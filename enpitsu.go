@@ -1,6 +1,7 @@
 package main
 
 import (
+	"github.com/mdouchement/enpitsu-go/app"
 	"fmt"
 	"gopkg.in/qml.v1"
 	"os"
@@ -16,7 +17,7 @@ func main() {
 func run() error {
 	engine := qml.NewEngine()
 
-	NewController()
+	app.NewController(engine.Context())
 
 	component, err := engine.LoadFile("enpitsu.qml")
 	if err != nil {

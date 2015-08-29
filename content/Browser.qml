@@ -19,6 +19,7 @@ Rectangle {
       TextField {
         id: filePath
         Layout.fillWidth: true
+        text: path
       }
 
       Button {
@@ -37,7 +38,7 @@ Rectangle {
     selectFolder: true
     // folder: shortcuts.home
     onAccepted: {
-      filePath.text = fileDialog.folder // Use Observer pattern
+      view.setPath(fileDialog.folder)
     }
     Component.onCompleted: visible = false
   }

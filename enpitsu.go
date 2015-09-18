@@ -3,8 +3,8 @@ package main
 //go:generate genqrc assets
 
 import (
-	"github.com/mdouchement/enpitsu-go/app"
 	"fmt"
+	"github.com/mdouchement/enpitsu-go/app"
 	"gopkg.in/qml.v1"
 	"os"
 )

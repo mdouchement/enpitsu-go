@@ -1,62 +1,62 @@
 package app
 
-import(
-  "gopkg.in/qml.v1"
-  "strings"
+import (
+	"gopkg.in/qml.v1"
+	"strings"
 )
 
 type Controller struct {
-  Model *Model
-  View *View
+	Model *Model
+	View  *View
 }
 
 func NewController(ctx *qml.Context) *Controller {
-  ctrl := &Controller{}
+	ctrl := &Controller{}
 
-  view := NewView(ctrl, ctx)
+	view := NewView(ctrl, ctx)
 
-  model := NewModel()
-  model.AttachObserver(ObserverFunc(view.Update))
+	model := NewModel()
+	model.AttachObserver(ObserverFunc(view.Update))
 
-  ctrl.Model = model
-  ctrl.View = view
-  return ctrl
+	ctrl.Model = model
+	ctrl.View = view
+	return ctrl
 }
 
 func (ctrl *Controller) LoadPath(path string) {
-  ctrl.Model.LoadPath(strings.Replace(path, "file://", "", 1))
+	ctrl.Model.LoadPath(strings.Replace(path, "file://", "", 1))
 }
 
 func (ctrl *Controller) ImagePath() string {
-  var path string
-  if ctrl.Model.HaveMetadata() {
-    path = "file://" + ctrl.Model.ImagePath()
-  } else {
-    path = "qrc:///assets/oawsooo.png"
-  }
-  return path
+	var path string
+	if ctrl.Model.HaveMetadata() {
+		path = "file://" + ctrl.Model.ImagePath()
+	} else {
+		path = "qrc:///assets/oawsooo.png"
+	}
+	return path
 }
 
 func (ctrl *Controller) NextImage() {
-  if ctrl.Model.HaveMetadata() && ctrl.Model.IsIndexValid("next") {
-    ctrl.Model.NextImage()
-  }
+	if ctrl.Model.HaveMetadata() && ctrl.Model.IsIndexValid("next") {
+		ctrl.Model.NextImage()
+	}
 }
 
 func (ctrl *Controller) PreviousImage() {
-  if ctrl.Model.HaveMetadata() && ctrl.Model.IsIndexValid("previous") {
-    ctrl.Model.PreviousImage()
-  }
+	if ctrl.Model.HaveMetadata() && ctrl.Model.IsIndexValid("previous") {
+		ctrl.Model.PreviousImage()
+	}
 }
 
 func (ctrl *Controller) Generate() {
-  if ctrl.Model.HaveMetadata() {
-    ctrl.Model.Generate()
-  }
+	if ctrl.Model.HaveMetadata() {
+		ctrl.Model.Generate()
+	}
 }
 
 func (ctrl *Controller) UpdateMetadata(kind string, value map[string]string) {
-  if ctrl.Model.HaveMetadata() {
-    ctrl.Model.UpdateAttributes(kind, value)
-  }
+	if ctrl.Model.HaveMetadata() {
+		ctrl.Model.UpdateAttributes(kind, value)
+	}
 }

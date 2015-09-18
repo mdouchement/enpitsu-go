@@ -18,6 +18,11 @@ Rectangle {
     TextField {
       id: galleryTitle
       Layout.fillWidth: true
+      text: gallery_title
+
+      onTextChanged: {
+        view.updateGalleryMeta(galleryTitle.text, galleryDescription.text);
+      }
     }
 
     Label {
@@ -27,6 +32,11 @@ Rectangle {
     TextArea {
       id: galleryDescription
       Layout.fillWidth: true
+      text: gallery_description
+
+      onTextChanged: {
+        view.updateGalleryMeta(galleryTitle.text, galleryDescription.text);
+      }
     }
 
     Label {
@@ -36,6 +46,11 @@ Rectangle {
     TextField {
       id: imageTitle
       Layout.fillWidth: true
+      text: image_title
+
+      onTextChanged: {
+        view.updateImageMeta(imageTitle.text, imageDescription.text);
+      }
     }
 
     Label {
@@ -45,6 +60,11 @@ Rectangle {
     TextArea {
       id: imageDescription
       Layout.fillWidth: true
+      text: image_description
+
+      onTextChanged: {
+        view.updateImageMeta(imageTitle.text, imageDescription.text);
+      }
     }
 
     RowLayout {
@@ -61,17 +81,29 @@ Rectangle {
       Button {
         id: previous
         text: 'Previous'
+
+        onClicked: {
+          view.previousImage();
+        }
       }
 
       Button {
         id: next
         text: 'Next'
+
+        onClicked: {
+          view.nextImage();
+        }
       }
     }
 
     Button {
       id: generate
       text: 'Generate'
+
+      onClicked: {
+        view.generate();
+      }
     }
   }
 }

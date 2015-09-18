@@ -23,9 +23,40 @@ func NewController(ctx *qml.Context) *Controller {
   return ctrl
 }
 
-func (ctrl *Controller) SetPath(path string) {
-  ctrl.Model.SetPath(strings.Replace(path, "file://", "", 1))
+func (ctrl *Controller) LoadPath(path string) {
+  ctrl.Model.LoadPath(strings.Replace(path, "file://", "", 1))
 }
 
-//  https://gist.github.com/icambridge/9708081
-// https://talks.golang.org/2014/organizeio.slide#1
+func (ctrl *Controller) ImagePath() string {
+  var path string
+  if ctrl.Model.HaveMetadata() {
+    path = "file://" + ctrl.Model.ImagePath()
+  } else {
+    path = "qrc:///assets/oawsooo.png"
+  }
+  return path
+}
+
+func (ctrl *Controller) NextImage() {
+  if ctrl.Model.HaveMetadata() && ctrl.Model.IsIndexValid("next") {
+    ctrl.Model.NextImage()
+  }
+}
+
+func (ctrl *Controller) PreviousImage() {
+  if ctrl.Model.HaveMetadata() && ctrl.Model.IsIndexValid("previous") {
+    ctrl.Model.PreviousImage()
+  }
+}
+
+func (ctrl *Controller) Generate() {
+  if ctrl.Model.HaveMetadata() {
+    ctrl.Model.Generate()
+  }
+}
+
+func (ctrl *Controller) UpdateMetadata(kind string, value map[string]string) {
+  if ctrl.Model.HaveMetadata() {
+    ctrl.Model.UpdateAttributes(kind, value)
+  }
+}

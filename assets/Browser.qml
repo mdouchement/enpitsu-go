@@ -38,7 +38,7 @@ Rectangle {
     selectFolder: true
     // folder: shortcuts.home
     onAccepted: {
-      view.setPath(fileDialog.folder)
+      view.loadPath(fileDialog.folder)
     }
     Component.onCompleted: visible = false
   }

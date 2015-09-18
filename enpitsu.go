@@ -1,5 +1,7 @@
 package main
 
+//go:generate genqrc assets
+
 import (
 	"github.com/mdouchement/enpitsu-go/app"
 	"fmt"
@@ -19,7 +21,7 @@ func run() error {
 
 	app.NewController(engine.Context())
 
-	component, err := engine.LoadFile("enpitsu.qml")
+	component, err := engine.LoadFile("qrc:///assets/enpitsu.qml")
 	if err != nil {
 		return err
 	}

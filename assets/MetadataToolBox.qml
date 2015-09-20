@@ -71,11 +71,19 @@ Rectangle {
       Button {
         id: copy
         text: 'Copy'
+
+        onClicked: {
+          view.copy(imageTitle.text, imageDescription.text);
+        }
       }
 
       Button {
         id: paste
         text: 'Paste'
+
+        onClicked: {
+          view.paste();
+        }
       }
 
       Button {

@@ -37,6 +37,14 @@ func (ctrl *Controller) ImagePath() string {
 	return path
 }
 
+func (ctrl *Controller) Copy(buffer map[string]string) {
+	ctrl.Model.Copy(buffer)
+}
+
+func (ctrl *Controller) Paste() {
+	ctrl.Model.Paste()
+}
+
 func (ctrl *Controller) NextImage() {
 	if ctrl.Model.HaveMetadata() && ctrl.Model.IsIndexValid("next") {
 		ctrl.Model.NextImage()

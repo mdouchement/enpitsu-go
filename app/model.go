@@ -1,8 +1,9 @@
 package app
 
 type Model struct {
-	metadata *Metadata
-	index    int
+	metadata  *Metadata
+	index     int
+	clipboard map[string]string
 	Observable
 }
 
@@ -19,6 +20,16 @@ func (m *Model) LoadPath(path string) {
 
 func (m *Model) ImagePath() string {
 	return m.metadata.ImagePath(m.index)
+}
+
+func (m *Model) Copy(buffer map[string]string) {
+	m.clipboard = buffer
+}
+
+func (m *Model) Paste() {
+	for key, value := range m.clipboard {
+		m.Publish("image_"+key, value)
+	}
 }
 
 func (m *Model) NextImage() {

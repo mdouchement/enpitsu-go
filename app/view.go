@@ -39,6 +39,18 @@ func (view *View) ImagePath() string {
 	return view.controller.ImagePath()
 }
 
+func (view *View) Copy(title, description string) {
+	image := map[string]string{
+		"title":       title,
+		"description": description,
+	}
+	view.controller.Copy(image)
+}
+
+func (view *View) Paste() {
+	view.controller.Paste()
+}
+
 func (view *View) NextImage() {
 	view.controller.NextImage()
 }

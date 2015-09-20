@@ -6,6 +6,7 @@ import (
 	"io/ioutil"
 	"os"
 	"path/filepath"
+	"time"
 )
 
 type ImageBuffer struct {
@@ -20,17 +21,33 @@ type MetadataBuffer struct {
 	Images      []ImageBuffer `json:"images"`
 }
 
+type item struct {
+	ToFilePath string
+	Buffer     MetadataBuffer
+}
+
 type Metadata struct {
-	path   string
-	buffer *MetadataBuffer
+	path       string
+	buffer     *MetadataBuffer
+	queue      chan item
+	QuitBackup chan struct{}
 }
 
 func NewMetadata(path string) *Metadata {
-	mtdt := new(Metadata)
-	mtdt.path = path
+	mtdt := &Metadata{
+		path:  path,
+		queue: make(chan item),
+	}
 	mtdt.initMetadata()
 
+	go generate(mtdt.queue)
+	mtdt.backup()
+
 	return mtdt
+}
+
+func (mtdt *Metadata) HasRunningBackup() bool {
+	return mtdt.QuitBackup != nil
 }
 
 func (mtdt *Metadata) GalleryHeaders() map[string]string {
@@ -66,18 +83,16 @@ func (mtdt *Metadata) NbOfImages() int {
 	return len(mtdt.buffer.Images)
 }
 
-func (mtdt *Metadata) Generate() {
-	jsonData, err := json.MarshalIndent(mtdt.buffer, "", "  ")
-	check(err)
+func (mtdt *Metadata) Generate(fname ...string) {
+	filename := "metadata.json"
+	if len(fname) > 0 {
+		filename = fname[0]
+	}
 
-	fo, err := os.Create(filepath.Join(mtdt.path, "metadata.json"))
-	check(err)
-	defer fo.Close()
-
-	w := bufio.NewWriter(fo)
-	_, err = w.WriteString(string(jsonData))
-	check(err)
-	w.Flush()
+	mtdt.queue <- item{
+		ToFilePath: filepath.Join(mtdt.path, filename),
+		Buffer:     *mtdt.buffer,
+	}
 }
 
 func (mtdt *Metadata) initMetadata() {
@@ -153,4 +168,38 @@ func (mtdt *Metadata) loadImages() (filenames []string, exists map[string]bool) 
 		exists[filename] = true
 	}
 	return
+}
+
+func (mtdt *Metadata) backup() {
+	ticker := time.NewTicker(5 * time.Minute)
+	mtdt.QuitBackup = make(chan struct{})
+
+	go func() {
+		for {
+			select {
+			case <-ticker.C:
+				filename := "metadata_backup_" + time.Now().Format("20060102150405") + ".json"
+				mtdt.Generate(filename)
+			case <-mtdt.QuitBackup:
+				ticker.Stop()
+				return
+			}
+		}
+	}()
+}
+
+func generate(queue <-chan item) {
+	for item := range queue {
+		jsonData, err := json.MarshalIndent(item.Buffer, "", "  ")
+		check(err)
+
+		fo, err := os.Create(item.ToFilePath)
+		check(err)
+		defer fo.Close()
+
+		w := bufio.NewWriter(fo)
+		_, err = w.WriteString(string(jsonData))
+		check(err)
+		w.Flush()
+	}
 }

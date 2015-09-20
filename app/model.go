@@ -12,6 +12,10 @@ func NewModel() *Model {
 }
 
 func (m *Model) LoadPath(path string) {
+	if m.HaveMetadata() && m.metadata.HasRunningBackup() {
+		close(m.metadata.QuitBackup) // Stop old backup routine
+	}
+
 	m.metadata = NewMetadata(path)
 	m.index = 0
 	m.Publish("path", path)

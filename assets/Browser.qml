@@ -9,7 +9,10 @@ Rectangle {
   color: 'lightsteelblue'
 
   ColumnLayout {
-    anchors.fill: parent
+    anchors {
+      fill: parent
+      margins: 4
+    }
 
     Label {
       text: "Gallery's path:"

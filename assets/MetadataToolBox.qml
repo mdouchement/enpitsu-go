@@ -4,12 +4,15 @@ import QtQuick.Layouts 1.1
 
 Rectangle {
   id: metadataToolBox
-  Layout.minimumWidth: 304
+  Layout.minimumWidth: 300
   Layout.maximumWidth: 400
   color: 'lightblue'
 
   ColumnLayout {
-    anchors.fill: parent
+    anchors {
+      fill: parent
+      margins: 4
+    }
 
     Label {
       text: "Gallery's title:"

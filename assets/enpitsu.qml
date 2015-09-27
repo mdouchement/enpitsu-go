@@ -11,17 +11,30 @@ ApplicationWindow {
   height: 720
   minimumHeight: 400
   minimumWidth: 600
+  color: 'lightgray'
 
   SplitView {
-    anchors.fill: parent
     orientation: Qt.Vertical
     Layout.fillWidth: true
+    anchors.fill: parent
 
-    Browser { id: browser }
+    Browser {
+      id: browser
+      anchors.top: parent.top
+    }
 
     SplitView {
-      MetadataToolBox { id: metadataToolBox }
-      Canvas { id: canvas }
+      anchors.bottom: parent.bottom
+
+      MetadataToolBox {
+        id: metadataToolBox
+        anchors.left: parent.left
+      }
+
+      Canvas {
+        id: canvas
+        anchors.right: parent.right
+      }
     }
   }
 }

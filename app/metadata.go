@@ -9,6 +9,8 @@ import (
 	"time"
 )
 
+var extensions []string = []string{"jpeg", "JPEG", "jpg", "JPG", "png", "PNG", "tif", "TIF", "tiff", "TIFF"}
+
 type ImageBuffer struct {
 	Filename    string `json:"filename"`
 	Title       string `json:"title"`
@@ -159,8 +161,13 @@ func (mtdt *Metadata) buildImagesMetadata() (ibs []ImageBuffer) {
 
 func (mtdt *Metadata) loadImages() (filenames []string, exists map[string]bool) {
 	exists = map[string]bool{}
-	files, err := filepath.Glob(filepath.Join(mtdt.path, "*.jpg"))
-	check(err)
+	files := []string{}
+	for _, extension := range extensions {
+		var err error = nil
+		list, err := filepath.Glob(filepath.Join(mtdt.path, "*."+extension))
+		check(err)
+		files = append(files, list...)
+	}
 
 	for _, file := range files {
 		_, filename := filepath.Split(file)

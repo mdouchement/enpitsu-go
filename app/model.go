@@ -19,7 +19,9 @@ func (m *Model) LoadPath(path string) {
 	m.metadata = NewMetadata(path)
 	m.index = 0
 	m.Publish("path", path)
-	m.updateGallery()
+	if m.metadata.NbOfImages() > 0 {
+		m.updateGallery()
+	}
 }
 
 func (m *Model) ImagePath() string {
